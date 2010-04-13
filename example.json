@@ -1,0 +1,12 @@
+{
+    "base_url": "http://simonwillison.net/",
+    "requests": [{
+        "offset": 0,
+        "path": "/about/",
+        "method": "GET"
+    }, {
+        "offset": 3,
+        "path": "/tags/",
+        "method": "GET"
+    }]
+}
