@@ -8,5 +8,10 @@
         "offset": 3,
         "path": "/tags/",
         "method": "GET"
+    }, {
+        "offset": 7,
+        "path": "http://www.postbin.org/y525h3",
+        "method": "POST",
+        "data": {"foo": "bar"}
     }]
 }

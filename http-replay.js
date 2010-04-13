@@ -1,7 +1,8 @@
 var sys = require('sys'),
     http = require('http'),
     fs = require('fs'),
-    url = require('url')
+    url = require('url'),
+    querystring = require('querystring')
 ;
 
 function getTimestamp() {
@@ -56,6 +57,11 @@ var args = process.argv;
 function sendRequest(base_url, request_description) {
     var full_url = url.resolve(base_url, request_description.path);
     var method = request_description.method.toUpperCase();
+    var data = request_description.data;
+    var data_encoded = '';
+    if (data) {
+        data_encoded = querystring.stringify(data);
+    }
     var bits = url.parse(full_url);
     var port = 80;
     if (bits.port) {
@@ -67,7 +73,11 @@ function sendRequest(base_url, request_description) {
         pathname += bits.search;
     }
     var client = http.createClient(port, hostname);
-    var request = client.request(method, pathname, {'host': hostname});
+    var headers = {'Host': hostname};
+    if (data_encoded && method == 'POST') {
+        headers['Content-Length'] = data_encoded.length;
+    }
+    var request = client.request(method, pathname, headers);
     request.addListener('response', function (response) {
         var statusCode = response.statusCode;
         response.setEncoding('utf8');
@@ -82,6 +92,9 @@ function sendRequest(base_url, request_description) {
             );
         });
     });
+    if (data_encoded && method == 'POST') {
+        request.write(data_encoded);
+    }
     request.end();
 }
 
