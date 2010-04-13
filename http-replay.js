@@ -98,7 +98,7 @@ function sendRequest(base_url, request_description) {
     request.end();
 }
 
-sys.puts('Server running at http://127.0.0.1:8123/');
+sys.puts('Status at http://127.0.0.1:8123/');
 
 var jsonfile = process.argv[process.argv.length - 1];
 fs.readFile(jsonfile, encoding='utf8', 
@@ -112,5 +112,11 @@ fs.readFile(jsonfile, encoding='utf8',
 
 http.createServer(function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello World\n');
+    var num_made = requests_made.length;
+    var num_total = requests_to_make.length;
+    var percent = Math.round((num_made / num_total) * 100 * 100) / 100;
+    res.write(
+        percent + '%: Done ' + num_made + ' out of ' + num_total
+    );
+    res.end();
 }).listen(8123);
